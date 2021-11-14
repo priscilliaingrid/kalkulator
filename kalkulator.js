@@ -24,13 +24,6 @@ function inputDigit(digit) {
     }
 }
  
-function inverseNumber() {
-    if (calculator.displayNumber === '0') {
-        return;
-    }
-    calculator.displayNumber = calculator.displayNumber * -1;
-}
- 
 function handleOperator(operator) {
     if (!calculator.waitingForSecondNumber) {
         calculator.operator = operator;
@@ -47,15 +40,7 @@ function performCalculation() {
         alert("Anda belum menetapkan operator");
         return;
     }
-  
-    let result = 0;
-    if (calculator.operator === "+") {
-        result = parseInt(calculator.firstNumber) + parseInt(calculator.displayNumber);
-    } else {
-        result = parseInt(calculator.firstNumber) - parseInt(calculator.displayNumber)
-    }
-  
-    // objek yang akan dikirimkan sebagai argumen fungsi putHistory()
+
     const history = {
         firstNumber: calculator.firstNumber,
         secondNumber: calculator.displayNumber,
@@ -67,11 +52,38 @@ function performCalculation() {
     renderHistory();
 }
 
+const calculate = () => {
+    let result = ''
+    switch(calculationOperator) {
+        case "+":
+            result = parseFloat(prevNumber) + parseFloat(currentNumber)
+            break
+        case "-":
+            result = parseFloat(prevNumber) - parseFloat(currentNumber)
+            break
+        case "*":
+            result = parseFloat(prevNumber) * parseFloat(currentNumber)
+            break
+        case "/":
+            result = parseFloat(prevNumber) / parseFloat(currentNumber)
+            break
+        default:
+            return
+    }
+    currentNumber = result
+    calculationOperator = ''
+}
+
+const decimal = document.querySelector('.decimal')
+decimal.addEventListener('click', (event) => {
+    inputDecimal(event.target.value)
+    updateScreen(currentNumber)
+})
+
 const buttons = document.querySelectorAll(".button");
 for (let button of buttons) {
     button.addEventListener('click', function (event) {
  
-        // mendapatkan objek elemen yang diklik
         const target = event.target;
  
         if (target.classList.contains('clear')) {
@@ -80,13 +92,19 @@ for (let button of buttons) {
             return;
         }
  
-        if (target.classList.contains('negative')) {
-            inverseNumber();
+        if (target.classList.contains('equals')) {
+            performCalculation();
             updateDisplay();
             return;
         }
- 
-        if (target.classList.contains('equals')) {
+
+        if (target.classList.contains('decimal')) {
+            performCalculation();
+            updateDisplay();
+            return;
+        }
+
+        if (target.classList.contains('percentage')) {
             performCalculation();
             updateDisplay();
             return;
