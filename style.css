@@ -40,9 +40,10 @@ body {
     border: 1px solid black;
     font-size: 2em;
 }
- 
+
+.clear,
+.percentage,
 .operator,
-.negative,
 .equals {
     background: orange;
 }
